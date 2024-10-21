@@ -12,9 +12,10 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
 cap.set(cv2.CAP_PROP_FPS, 30)
 
 # Set target points
+# The left taget point is placed on the right as the driver's face is inverted in camera's perspective
 frame_width, frame_height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-target_point_left = (frame_width // 2 - 25, frame_height // 2)
-target_point_right = (frame_width // 2 + 25, frame_height // 2)
+target_point_left = (frame_width // 2 + 25, frame_height // 2)
+target_point_right = (frame_width // 2 - 25, frame_height // 2)
 
 def draw_point(img, color, position):
     cv2.circle(img, position, 5, color, -1)
