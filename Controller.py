@@ -1,5 +1,6 @@
 import pygame
-import Motor as motor
+# import Motor as motor
+import time
 
 pygame.init()
 pygame.joystick.init()
@@ -11,15 +12,44 @@ else:
     joystick.init()
     print(f"Joystick '{joystick.get_name()}' initialized.")
 
-BUTTON_1 = 0
-BUTTON_2 = 1 
+X_AXIS = 0
+Y_AXIS = 4
+BUTTON_A = 1
+BUTTON_B = 2 
+BUTTON_SELECT = 8
+BUTTON_START = 9
 
-while True:
-    pygame.event.pump()
-    
-    if joystick.get_button(BUTTON_1):
-        motor.moveVMotor(True)
-    elif joystick.get_button(BUTTON_2):
-        motor.moveVMotor(False)
-    else:
-        motor.stopMotor()
+try:
+    while True:
+        pygame.event.pump()
+        x_axis = joystick.get_axis(0)
+        y_axis = joystick.get_axis(4)
+
+        if joystick.get_axis(X_AXIS) < -0.5:
+            print("LEFT pressed")
+        elif joystick.get_axis(X_AXIS) > 0.5:
+            print("RIGHT pressed")
+        if joystick.get_axis(Y_AXIS) < -0.5:
+            print("DOWN pressed")
+        elif joystick.get_axis(Y_AXIS) > 0.5:
+            print("UP pressed")
+        if joystick.get_button(BUTTON_A):
+            print("A pressed")
+            #motor.moveVMotor(True)
+        if joystick.get_button(BUTTON_B):
+            print("B pressed")
+            #motor.moveVMotor(False)
+        if joystick.get_button(BUTTON_SELECT):
+            print("SELECT pressed")
+        if joystick.get_button(BUTTON_START):
+            print("START pressed")
+            #motor.moveVMotor(True)
+        #else:
+            #motor.stopMotor()
+
+        time.sleep(0.1)  # Reduce CPU usage
+
+except KeyboardInterrupt:
+    print("Exiting program.")
+finally:
+    pygame.quit()
