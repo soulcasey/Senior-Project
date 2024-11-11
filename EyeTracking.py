@@ -68,15 +68,12 @@ while True:
         y_movement_right = target_point_right[1] - right_eye[1]
 
         # Display coordinate and calculation information on screen for prototype
-        cv2.putText(frame, f"RightEyePos: {right_eye}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(frame, f"MovTo: ({x_movement_right}, {y_movement_right})", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-        cv2.putText(frame, f"LeftEyePos: {left_eye}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(frame, f"MovTo: ({x_movement_left}, {y_movement_left})", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(frame, f"EYE POSITION: {right_eye}, {left_eye}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(frame, f"MOVE BY: ({x_movement_right}, {y_movement_right}), ({x_movement_left}, {y_movement_left})", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Check if the points are overlapped
         if abs(x_movement_left) <= RANGE_TARGET and abs(y_movement_left) <= RANGE_TARGET and abs(x_movement_right) <= RANGE_TARGET and abs(y_movement_right) <= RANGE_TARGET:
-            cv2.putText(frame, "GOOD!", (10, 230), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.putText(frame, "GOOD!", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
     cv2.imshow('Frame', frame)
 
