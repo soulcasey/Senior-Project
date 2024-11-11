@@ -6,7 +6,7 @@ import mediapipe as mp
 mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.9, min_tracking_confidence=0.9)
 
 # Camera setup
-cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
 cap.set(cv2.CAP_PROP_FPS, 30)
@@ -64,6 +64,8 @@ while True:
         # Check if the points are overlapped
         if abs(x_movement_left) <= 3 and abs(y_movement_left) <= 3 and abs(x_movement_right) <= 3 and abs(y_movement_right) <= 3:
             cv2.putText(frame, "GOOD!", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    
+    cv2.imshow('Frame', frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
