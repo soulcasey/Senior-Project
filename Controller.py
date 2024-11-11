@@ -18,8 +18,8 @@ while True:
     pygame.event.pump()
     
     if joystick.get_button(BUTTON_1):
-        motor.moveHMotor(True)
+        motor.moveVMotor(True)
     elif joystick.get_button(BUTTON_2):
-        motor.moveHMotor(False)
+        motor.moveVMotor(False)
     else:
         motor.stopMotor()
