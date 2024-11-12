@@ -13,7 +13,7 @@ else:
     print(f"Joystick '{joystick.get_name()}' initialized.")
 
 X_AXIS = 0
-Y_AXIS = 4
+Y_AXIS = 1
 BUTTON_A = 1
 BUTTON_B = 2 
 BUTTON_SELECT = 8
@@ -22,8 +22,8 @@ BUTTON_START = 9
 try:
     while True:
         pygame.event.pump()
-        x_axis = joystick.get_axis(0)
-        y_axis = joystick.get_axis(4)
+        x_axis = joystick.get_axis(X_AXIS)
+        y_axis = joystick.get_axis(Y_AXIS)
 
         if joystick.get_axis(X_AXIS) < -0.5:
             print("LEFT pressed")
