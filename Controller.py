@@ -30,9 +30,9 @@ try:
         elif joystick.get_axis(X_AXIS) > 0.5:
             print("RIGHT pressed")
         if joystick.get_axis(Y_AXIS) < -0.5:
-            print("DOWN pressed")
-        elif joystick.get_axis(Y_AXIS) > 0.5:
             print("UP pressed")
+        elif joystick.get_axis(Y_AXIS) > 0.5:
+            print("DOWN pressed")
         if joystick.get_button(BUTTON_A):
             print("A pressed")
             #motor.moveVMotor(True)
