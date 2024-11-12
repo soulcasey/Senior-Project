@@ -1,5 +1,5 @@
 import pygame
-# import Motor as motor
+import Motor as motor
 import time
 
 pygame.init()
@@ -27,12 +27,16 @@ try:
 
         if joystick.get_axis(X_AXIS) < -0.5:
             print("LEFT pressed")
+            motor.moveVMotor(True)
         elif joystick.get_axis(X_AXIS) > 0.5:
             print("RIGHT pressed")
+            motor.moveVMotor(False)
         if joystick.get_axis(Y_AXIS) < -0.5:
             print("UP pressed")
+            motor.moveHMotor(True)
         elif joystick.get_axis(Y_AXIS) > 0.5:
             print("DOWN pressed")
+            motor.moveHMotor(False)
         if joystick.get_button(BUTTON_A):
             print("A pressed")
             #motor.moveVMotor(True)
@@ -44,8 +48,8 @@ try:
         if joystick.get_button(BUTTON_START):
             print("START pressed")
             #motor.moveVMotor(True)
-        #else:
-            #motor.stopMotor()
+        else:
+            motor.stopMotor()
 
         time.sleep(0.1)  # Reduce CPU usage
 
