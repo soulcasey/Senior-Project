@@ -1,12 +1,13 @@
 import cv2
 import mediapipe as mp
 import time
+import numpy as np
 
 RANGE_TARGET = 5
+DARKNESS_THRESHOLD = 50
 
 # Initialize MediaPipe's holistic model
-# Will be using the most basic model for prototype
-mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.9, min_tracking_confidence=0.9)
+mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8)
 
 # Camera setup
 cap = cv2.VideoCapture(0)
@@ -15,7 +16,6 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 800)
 cap.set(cv2.CAP_PROP_FPS, 30)
 
 # Set target points
-# The left taget point is placed on the right as the driver's face is inverted in camera's perspective
 frame_width, frame_height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 target_point_left = (frame_width // 2 + 25, frame_height // 2)
 target_point_right = (frame_width // 2 - 25, frame_height // 2)
@@ -29,6 +29,10 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
+
+    # Calculate brightness by converting to grayscale and taking the mean
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    brightness = np.mean(gray_frame)
 
     frame = cv2.flip(frame, 1)
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -62,7 +66,6 @@ while True:
         draw_point(frame, (0, 255, 0), target_point_right)
         
         # Calculate movement to align the reference point to the target point
-        # Only to basic distance calculation for now
         x_movement_left = target_point_left[0] - left_eye[0]
         y_movement_left = target_point_left[1] - left_eye[1]
         x_movement_right = target_point_right[0] - right_eye[0]
@@ -73,8 +76,28 @@ while True:
         cv2.putText(frame, f"MOVE BY: ({x_movement_right}, {y_movement_right}), ({x_movement_left}, {y_movement_left})", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
         # Check if the points are overlapped
-        if abs(x_movement_left) <= RANGE_TARGET and abs(y_movement_left) <= RANGE_TARGET and abs(x_movement_right) <= RANGE_TARGET and abs(y_movement_right) <= RANGE_TARGET:
-            cv2.putText(frame, "GOOD!", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        x_average = (x_movement_left + x_movement_right) / 2
+        y_average = (y_movement_left + y_movement_right) / 2
+
+        text = ""
+        if abs(x_average) > RANGE_TARGET:
+            if x_average < 0:
+                text += "Left "
+            else:
+                text += "Right "
+
+        if abs(y_average) > RANGE_TARGET:
+            if y_average < 0:
+                text += "Up "
+            else:
+                text += "Down "
+        
+        if text == "":
+            text = "GOOD!"
+
+        cv2.putText(frame, text, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    elif brightness < DARKNESS_THRESHOLD: # Check if the room is too dark
+        cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
     cv2.imshow('Frame', frame)
 
