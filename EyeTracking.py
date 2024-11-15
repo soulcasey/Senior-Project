@@ -60,10 +60,10 @@ while True:
         )
 
         # Draw the left and right eye reference points along with their target points
-        draw_point(frame, (0, 0, 255), left_eye)
-        draw_point(frame, (0, 255, 0), target_point_left)
-        draw_point(frame, (0, 0, 255), right_eye)
-        draw_point(frame, (0, 255, 0), target_point_right)
+        draw_point(frame, (0, 255, 0), left_eye)
+        draw_point(frame, (0, 0, 255), target_point_left)
+        draw_point(frame, (0, 255, 0), right_eye)
+        draw_point(frame, (0, 0, 255), target_point_right)
         
         # Calculate movement to align the reference point to the target point
         x_movement_left = target_point_left[0] - left_eye[0]
