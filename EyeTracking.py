@@ -123,6 +123,8 @@ class EyeTracking:
 
         cv2.imshow('Frame', frame)
 
+        cv2.waitKey(1)
+
     def exit(self):
         self.cap.release()
         cv2.destroyAllWindows()
