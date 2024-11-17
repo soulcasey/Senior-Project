@@ -1,53 +1,68 @@
-from Controller import Button, Controller
-from EyeTracking import EyeTracking
-import time
-
-# Function to print button press based on auto_mode
-def on_button_press(button):
-    if not auto_mode:
-        print(f"Pressed {button.value}")
-
-# Function to print button release based on auto_mode
-def on_button_release(button):
-    if not auto_mode:
-        print(f"Released {button.value}")
+from Controller import ButtonType, Controller
+from EyeTracking import EyeTracking, Direction
+import Motor as motor
 
 # Function to toggle auto_mode on or off when START or SELECT is pressed
 def toggle_auto_mode():
     global auto_mode
     auto_mode = not auto_mode
+    motor.stopMotor1()
+    motor.stopMotor2()
+    motor.stopMotor3()
     print(f"AUTO_MODE is now {'ON' if auto_mode else 'OFF'}")
 
+# Initialize the auto mode to be off by default
 auto_mode = False
 
+# Initialize the eye tracking and controller objects
 eye_tracking = EyeTracking()
 controller = Controller()
 
-# Set button actions
-controller.set_button_press_action(Button.LEFT, lambda: on_button_press(Button.LEFT))
-controller.set_button_press_action(Button.RIGHT, lambda: on_button_press(Button.RIGHT))
-controller.set_button_press_action(Button.UP, lambda: on_button_press(Button.UP))
-controller.set_button_press_action(Button.DOWN, lambda: on_button_press(Button.DOWN))
-controller.set_button_press_action(Button.A, lambda: on_button_press(Button.A))
-controller.set_button_press_action(Button.B, lambda: on_button_press(Button.B))
-controller.set_button_press_action(Button.SELECT, lambda: toggle_auto_mode())
-controller.set_button_press_action(Button.START, lambda: on_button_press(Button.START))
+# Set button press actions for motor control with auto_mode checks
+controller.set_button_press_action(ButtonType.LEFT, lambda: motor.moveMotor1(True) if not auto_mode else None)
+controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor1(False) if not auto_mode else None)
 
-# Set button release actions, print only if auto_mode is off
-controller.set_button_release_action(Button.LEFT, lambda: on_button_release(Button.LEFT))
-controller.set_button_release_action(Button.RIGHT, lambda: on_button_release(Button.RIGHT))
-controller.set_button_release_action(Button.UP, lambda: on_button_release(Button.UP))
-controller.set_button_release_action(Button.DOWN, lambda: on_button_release(Button.DOWN))
-controller.set_button_release_action(Button.A, lambda: on_button_release(Button.A))
-controller.set_button_release_action(Button.B, lambda: on_button_release(Button.B))
-controller.set_button_release_action(Button.SELECT, lambda: on_button_release(Button.SELECT))
-controller.set_button_release_action(Button.START, lambda: on_button_release(Button.START))
+controller.set_button_press_action(ButtonType.UP, lambda: motor.moveMotor2(True) if not auto_mode else None)
+controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor2(False) if not auto_mode else None)
 
-while (True):
-    controller.loop()
-    eye_tracking.loop()
+controller.set_button_press_action(ButtonType.A, lambda: motor.moveMotor3(True) if not auto_mode else None)
+controller.set_button_press_action(ButtonType.B, lambda: motor.moveMotor3(False) if not auto_mode else None)
 
-    if 0xFF == ord('q'):
-        break
+# Set button press actions for toggling auto mode
+controller.set_button_press_action(ButtonType.SELECT, toggle_auto_mode)
 
-controller.exit()
+# Set button release actions to stop motors
+controller.set_button_release_action(ButtonType.LEFT, lambda: motor.stopMotor1() if not auto_mode else None)
+controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1() if not auto_mode else None)
+
+controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if not auto_mode else None)
+controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if not auto_mode else None)
+
+controller.set_button_release_action(ButtonType.A, lambda: motor.stopMotor3() if not auto_mode else None)
+controller.set_button_release_action(ButtonType.B, lambda: motor.stopMotor3() if not auto_mode else None)
+
+# Main loop
+try:
+    while True:
+        controller.loop()
+        eye_tracking.loop()
+
+        if auto_mode:
+            if Direction.UP in eye_tracking.move_direction:
+                motor.moveMotor1(True)
+            elif Direction.DOWN in eye_tracking.move_direction:
+                motor.moveMotor1(False)
+            else:
+                motor.stopMotor1()
+
+            if Direction.LEFT in eye_tracking.move_direction:
+                motor.moveMotor2(True)
+            elif Direction.RIGHT in eye_tracking.move_direction:
+                motor.moveMotor2(False)
+            else:
+                motor.stopMotor2()
+        
+
+finally:
+    controller.exit()
+    eye_tracking.exit()

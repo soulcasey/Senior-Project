@@ -46,3 +46,23 @@ def moveMotor3(forward: bool):
 
 def stopMotor3():
     motor_3.stop()
+
+
+# def moveMotor1(forward: bool):
+#     print("Motor 1 Forward") if forward else print("Motor 1 Backward")
+
+# def stopMotor1():
+#     print("Motor 1 Stop")
+
+# def moveMotor2(forward: bool):
+#     print("Motor 2 Forward") if forward else print("Motor 2 Backward")
+
+# def stopMotor2():
+#     print("Motor 2 Stop")
+
+# def moveMotor3(forward: bool):
+#     print("Motor 3 Forward") if forward else print("Motor 3 Backward")
+
+# def stopMotor3():
+#     print("Motor 3 Stop")
+

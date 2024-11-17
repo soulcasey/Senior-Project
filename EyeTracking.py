@@ -1,3 +1,4 @@
+from enum import Enum
 import cv2
 import mediapipe as mp
 import time
@@ -8,6 +9,13 @@ DARKNESS_THRESHOLD = 50
 AXIS_X = 800
 AXIS_Y = 600
 TARGET_OFFSET = 25
+
+class Direction(Enum):
+    LEFT = "LEFT"
+    RIGHT = "RIGHT"
+    UP = "UP"
+    DOWN = "DOWN"
+
 
 class EyeTracking:
     def __init__(self):
@@ -25,6 +33,7 @@ class EyeTracking:
         self.target_point_left = (self.frame_width // 2 + 25, self.frame_height // 2)
         self.target_point_right = (self.frame_width // 2 - 25, self.frame_height // 2)
 
+        self.move_direction = []
         self.prev_time = time.time()  # Initialize previous time for FPS calculation
 
     def draw_point(self, img, color, position):
@@ -87,23 +96,24 @@ class EyeTracking:
             x_average = (x_movement_left + x_movement_right) / 2
             y_average = (y_movement_left + y_movement_right) / 2
 
-            text = ""
+            self.move_direction.clear()
+
             if abs(x_average) > RANGE_TARGET:
                 if x_average < 0:
-                    text += "Left "
+                    self.move_direction.append(Direction.LEFT)
                 else:
-                    text += "Right "
+                    self.move_direction.append(Direction.RIGHT)
 
             if abs(y_average) > RANGE_TARGET:
                 if y_average < 0:
-                    text += "Up "
+                    self.move_direction.append(Direction.UP)
                 else:
-                    text += "Down "
+                    self.move_direction.append(Direction.DOWN)
+                    
+            
+            move_direction_text = ', '.join([direction.value for direction in self.move_direction]) if len(self.move_direction) > 0 else "GOOD"
+            cv2.putText(frame, move_direction_text, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
-            if text == "":
-                text = "GOOD!"
-
-            cv2.putText(frame, text, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         elif brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
             cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
