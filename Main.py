@@ -1,6 +1,14 @@
 from Controller import ButtonType, Controller
 from EyeTracking import EyeTracking, Direction
 import Motor as motor
+import argparse
+
+parser = argparse.ArgumentParser(description="Automatic Rear View Mirror")
+
+# Add arguments
+parser.add_argument('--headless', action='store_true', help="Enable headless mode (no GUI)")
+args = parser.parse_args()
+headless = args.headless
 
 # Function to toggle auto_mode on or off when START or SELECT is pressed
 def toggle_auto_mode():
@@ -15,7 +23,7 @@ def toggle_auto_mode():
 auto_mode = False
 
 # Initialize the eye tracking and controller objects
-eye_tracking = EyeTracking()
+eye_tracking = EyeTracking(headless)
 controller = Controller()
 
 # Set button press actions for motor control with auto_mode checks

@@ -1,9 +1,11 @@
 import pygame
 from enum import Enum
+import platform
 
 # Constants for joystick button and axis mappings
 X_AXIS = 0
-Y_AXIS = 1
+Y_AXIS = 1  # Y-axis on Raspberry Pi
+Y_AXIS_WINDOWS = 4  # Y-axis on Windows
 BUTTON_A = 1
 BUTTON_B = 2
 BUTTON_SELECT = 8
@@ -56,6 +58,10 @@ class Controller:
             self.joystick = pygame.joystick.Joystick(0)
             self.joystick.init()
             print(f"Joystick '{self.joystick.get_name()}' initialized.")
+        
+        if platform.system() != 'Linux':
+            global Y_AXIS
+            Y_AXIS = Y_AXIS_WINDOWS
 
     def is_button_pressed(self, button_type):
         if button_type in self.button_states:

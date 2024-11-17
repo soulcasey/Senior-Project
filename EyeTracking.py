@@ -18,7 +18,7 @@ class Direction(Enum):
 
 
 class EyeTracking:
-    def __init__(self):
+    def __init__(self, headless: bool):
         # Initialize face mesh model instead of holistic for more precise eye detection
         self.mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8)
         
@@ -35,6 +35,7 @@ class EyeTracking:
 
         self.move_direction = []
         self.prev_time = time.time()  # Initialize previous time for FPS calculation
+        self.headless = headless
 
     def draw_point(self, img, color, position):
         cv2.circle(img, position, 5, color, -1)
@@ -45,7 +46,7 @@ class EyeTracking:
         self.prev_time = current_time
         return fps
 
-    def loop(self, display_callback=None):
+    def loop(self):
         ret, frame = self.cap.read()
         if not ret:
             raise RuntimeError("No camera")
@@ -63,6 +64,8 @@ class EyeTracking:
 
         # Display FPS on frame
         cv2.putText(frame, f"FPS: {int(fps)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        self.move_direction.clear()
 
         # If face landmarks have been detected
         if results.pose_landmarks:
@@ -117,14 +120,12 @@ class EyeTracking:
         elif brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
             cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        # If a custom display callback is provided, call it
-        if display_callback:
-            display_callback(frame)
-
-        cv2.imshow('Frame', frame)
-
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            raise RuntimeError("End")
+        if self.headless:
+            if len(self.move_direction) > 0:
+                print(', '.join([direction.value for direction in self.move_direction]))
+        else:
+            cv2.imshow('Frame', frame)
+            cv2.waitKey(1) 
 
     def exit(self):
         self.cap.release()
