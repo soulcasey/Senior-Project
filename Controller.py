@@ -3,7 +3,7 @@ from enum import Enum
 
 # Constants for joystick button and axis mappings
 X_AXIS = 0
-Y_AXIS = 4
+Y_AXIS = 1
 BUTTON_A = 1
 BUTTON_B = 2
 BUTTON_SELECT = 8
