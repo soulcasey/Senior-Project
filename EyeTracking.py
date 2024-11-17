@@ -123,7 +123,8 @@ class EyeTracking:
 
         cv2.imshow('Frame', frame)
 
-        cv2.waitKey(1)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            raise RuntimeError("End")
 
     def exit(self):
         self.cap.release()
