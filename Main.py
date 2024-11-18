@@ -23,7 +23,7 @@ def toggle_auto_mode():
 auto_mode = False
 
 # Initialize the eye tracking and controller objects
-eye_tracking = EyeTracking(headless)
+# eye_tracking = EyeTracking(headless)
 controller = Controller()
 
 # Set button press actions for motor control with auto_mode checks
@@ -53,24 +53,24 @@ controller.set_button_release_action(ButtonType.B, lambda: motor.stopMotor3() if
 try:
     while True:
         controller.loop()
-        eye_tracking.loop()
+        # eye_tracking.loop()
 
-        if auto_mode:
-            if Direction.UP in eye_tracking.move_direction:
-                motor.moveMotor1(True)
-            elif Direction.DOWN in eye_tracking.move_direction:
-                motor.moveMotor1(False)
-            else:
-                motor.stopMotor1()
+        # if auto_mode:
+        #     if Direction.UP in eye_tracking.move_direction:
+        #         motor.moveMotor1(True)
+        #     elif Direction.DOWN in eye_tracking.move_direction:
+        #         motor.moveMotor1(False)
+        #     else:
+        #         motor.stopMotor1()
 
-            if Direction.LEFT in eye_tracking.move_direction:
-                motor.moveMotor2(True)
-            elif Direction.RIGHT in eye_tracking.move_direction:
-                motor.moveMotor2(False)
-            else:
-                motor.stopMotor2()
+        #     if Direction.LEFT in eye_tracking.move_direction:
+        #         motor.moveMotor2(True)
+        #     elif Direction.RIGHT in eye_tracking.move_direction:
+        #         motor.moveMotor2(False)
+        #     else:
+        #         motor.stopMotor2()
         
 
 finally:
     controller.exit()
-    eye_tracking.exit()
+    # eye_tracking.exit()
