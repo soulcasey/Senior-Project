@@ -1,5 +1,5 @@
 from Controller import ButtonType, Controller
-from EyeTracking import EyeTracking, Direction
+# from EyeTracking import EyeTracking, Direction
 import Motor as motor
 import argparse
 
