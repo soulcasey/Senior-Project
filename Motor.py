@@ -36,9 +36,11 @@ if is_raspberry_pi:
     motor_3 = Motor(pwm_pin=36, dir_pin1=31, dir_pin2=29)
 
     def moveMotor1(forward: bool):
+        print("Motor 1 Forward") if forward else print("Motor 1 Backward")
         motor_1.move(forward)
 
     def stopMotor1():
+        print("Motor 1 Stop")
         motor_1.stop()
 
     def moveMotor2(forward: bool):
