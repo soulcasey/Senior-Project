@@ -9,7 +9,7 @@ if is_raspberry_pi:
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)
 
-    speed = 40
+    speed = 1000
 
     class Motor:
         def __init__(self, pwm_pin, dir_pin1, dir_pin2):
