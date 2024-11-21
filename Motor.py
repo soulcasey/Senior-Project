@@ -22,10 +22,10 @@ if is_raspberry_pi:
             GPIO.setup(self.dir_pin2, GPIO.OUT)
             self.motor = GPIO.PWM(self.pwm_pin, 1000)
             self.motor.start(0)
-            
+
             global motorCount
             motorCount += 1
-            print("Motor " + motorCount + " setup complete")
+            print("Motor " + str(motorCount) + " setup complete")
 
         def move(self, forward: bool):
             GPIO.output(self.dir_pin1, forward)

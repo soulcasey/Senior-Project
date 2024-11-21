@@ -1,34 +1,37 @@
-import Motor as motor
+import RPi.GPIO as GPIO
 import time
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(16, GPIO.OUT)
+GPIO.setup(18, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+motorSpeed = GPIO.PWM(22, 1000)
+motorSpeed.start(0)
+
+def forward(speed):
+    print(f"Going forward at {speed}%")
+    GPIO.output(16, True)
+    GPIO.output(18, False)
+    motorSpeed.ChangeDutyCycle(speed)
+
+def backward(speed):
+    print(f"Going backward at {speed}%")
+    GPIO.output(16, False)
+    GPIO.output(18, True)
+    motorSpeed.ChangeDutyCycle(speed)
+    
+def stop():
+    GPIO.output(16, False)
+    GPIO.output(18, False)
+    time.sleep(1)
+    motorSpeed.ChangeDutyCycle(0)
+
 try:
-    motor.moveMotor1(True)
-    time.sleep(2)
-    motor.stopMotor1()
-    time.sleep(2)
-    motor.moveMotor1(False)
-    time.sleep(2)
-    motor.stopMotor1()
-    time.sleep(2)
-
-    motor.moveMotor2(True)
-    time.sleep(2)
-    motor.stopMotor2()
-    time.sleep(2)
-    motor.moveMotor2(False)
-    time.sleep(2)
-    motor.stopMotor2()
-    time.sleep(2)
-
-    motor.moveMotor3(True)
-    time.sleep(2)
-    motor.stopMotor3()
-    time.sleep(2)
-    motor.moveMotor3(False)
-    time.sleep(2)
-    motor.stopMotor3()
-    time.sleep(2)
-except Exception as e:
-    motor.stopAllMotors()
+    forward(50)
+    time.sleep(3)
+    stop()
+    backward(75)
+    time.sleep(3)
 finally:
-    motor.exit()
+    motorSpeed.stop()
+    GPIO.cleanup()
