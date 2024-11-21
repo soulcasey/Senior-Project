@@ -3,11 +3,11 @@ import time
 
 try:
     motor.moveMotor2(True)
-    time.sleep(6.5)
+    time.sleep(6.4)
     motor.stopMotor2()
     time.sleep(2)
     motor.moveMotor2(False)
-    time.sleep(6.5)
+    time.sleep(6.4)
     motor.stopMotor2()
     time.sleep(2)
 
