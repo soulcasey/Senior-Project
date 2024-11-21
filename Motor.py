@@ -9,7 +9,7 @@ if is_raspberry_pi:
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)
 
-    speed = 100
+    speed = 50
 
     class Motor:
         def __init__(self, pwm_pin, dir_pin1, dir_pin2):
@@ -20,6 +20,7 @@ if is_raspberry_pi:
             GPIO.setup(self.dir_pin1, GPIO.OUT)
             GPIO.setup(self.dir_pin2, GPIO.OUT)
             self.motor = GPIO.PWM(self.pwm_pin, 1000)
+            self.motor.start(0)
 
         def move(self, forward: bool):
             GPIO.output(self.dir_pin1, forward)
@@ -44,15 +45,19 @@ if is_raspberry_pi:
         motor_1.stop()
 
     def moveMotor2(forward: bool):
+        print("Motor 2 Forward") if forward else print("Motor 2 Backward")
         motor_2.move(forward)
 
     def stopMotor2():
+        print("Motor 2 Stop")
         motor_2.stop()
 
     def moveMotor3(forward: bool):
+        print("Motor 3 Forward") if forward else print("Motor 3 Backward")
         motor_3.move(forward)
 
     def stopMotor3():
+        print("Motor 3 Stop")
         motor_3.stop()
 
 else:
@@ -74,3 +79,11 @@ else:
 
     def stopMotor3():
         print("Motor 3 Stop")
+
+def stopAllMotors():
+    stopMotor1()
+    stopMotor2
+    stopMotor3
+
+def exit():
+    GPIO.cleanup()

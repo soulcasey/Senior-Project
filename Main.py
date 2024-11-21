@@ -68,9 +68,10 @@ try:
             elif Direction.RIGHT in eye_tracking.move_direction:
                 motor.moveMotor2(False)
             else:
-                motor.stopMotor2()
-        
-
+                motor.stopMotor2()      
+except Exception as e:
+    motor.stopAllMotors()
 finally:
     controller.exit()
-    # eye_tracking.exit()
+    eye_tracking.exit()
+    motor.exit()
