@@ -10,6 +10,7 @@ if is_raspberry_pi:
         GPIO.setmode(GPIO.BOARD)
 
     speed = 50
+    motorCount = 0
 
     class Motor:
         def __init__(self, pwm_pin, dir_pin1, dir_pin2):
@@ -21,6 +22,8 @@ if is_raspberry_pi:
             GPIO.setup(self.dir_pin2, GPIO.OUT)
             self.motor = GPIO.PWM(self.pwm_pin, 1000)
             self.motor.start(0)
+            motorCount += 1
+            print("Motor " + motorCount + " setup complete")
 
         def move(self, forward: bool):
             GPIO.output(self.dir_pin1, forward)
