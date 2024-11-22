@@ -4,7 +4,7 @@ import time
 try:
     for i in range(10):
         motor.moveMotor2(True)
-        time.sleep(6.4)
+        time.sleep(6.3)
         motor.stopMotor2()
         time.sleep(2)
 
