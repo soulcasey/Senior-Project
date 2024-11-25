@@ -18,6 +18,13 @@ def toggle_auto_mode():
     motor.stopMotor1()
     motor.stopMotor2()
     print(f"AUTO_MODE is now {'ON' if auto_mode else 'OFF'}")
+    if auto_mode:
+        light.warningLight(False)
+        light.startBlink()
+    else:
+        light.stopBlink()
+        light.warningLight(True)
+
 
 # Initialize the auto mode to be off by default
 auto_mode = False
