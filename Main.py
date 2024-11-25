@@ -17,7 +17,10 @@ def toggle_auto_mode():
     auto_mode = not auto_mode
     motor.stopMotor1()
     motor.stopMotor2()
+    set_warning_light()
     print(f"AUTO_MODE is now {'ON' if auto_mode else 'OFF'}")
+
+def set_warning_light():
     if auto_mode:
         light.warningLight(False)
         light.startBlink()
@@ -55,6 +58,8 @@ controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2()
 
 controller.set_button_release_action(ButtonType.A, lambda: light.cameraLight(False))
 controller.set_button_release_action(ButtonType.B, lambda: light.warningLight(False))
+
+set_warning_light()
 
 # Main loop
 try:
