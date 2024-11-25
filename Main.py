@@ -46,18 +46,12 @@ controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor2(Fal
 # Set button press actions for toggling auto mode
 controller.set_button_press_action(ButtonType.SELECT, toggle_auto_mode)
 
-controller.set_button_press_action(ButtonType.A, lambda: light.cameraLight(True))
-controller.set_button_press_action(ButtonType.B, lambda: light.warningLight(True))
-
 # Set button release actions to stop motors
 controller.set_button_release_action(ButtonType.LEFT, lambda: motor.stopMotor1() if not auto_mode else None)
 controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1() if not auto_mode else None)
 
 controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if not auto_mode else None)
 controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if not auto_mode else None)
-
-controller.set_button_release_action(ButtonType.A, lambda: light.cameraLight(False))
-controller.set_button_release_action(ButtonType.B, lambda: light.warningLight(False))
 
 set_warning_light()
 
@@ -67,20 +61,26 @@ try:
         controller.loop()
         eye_tracking.loop()
 
-        if auto_mode:
-            if Direction.UP in eye_tracking.move_direction:
-                motor.moveMotor1(True)
-            elif Direction.DOWN in eye_tracking.move_direction:
-                motor.moveMotor1(False)
-            else:
-                motor.stopMotor1()
+        #if auto_mode:
+            # if Direction.UP in eye_tracking.move_direction:
+            #     motor.moveMotor1(True)
+            # elif Direction.DOWN in eye_tracking.move_direction:
+            #     motor.moveMotor1(False)
+            # else:
+            #     motor.stopMotor1()
 
-            if Direction.LEFT in eye_tracking.move_direction:
-                motor.moveMotor2(True)
-            elif Direction.RIGHT in eye_tracking.move_direction:
-                motor.moveMotor2(False)
-            else:
-                motor.stopMotor2()      
+            # if Direction.LEFT in eye_tracking.move_direction:
+            #     motor.moveMotor2(True)
+            # elif Direction.RIGHT in eye_tracking.move_direction:
+            #     motor.moveMotor2(False)
+            # else:
+            #     motor.stopMotor2()
+        
+        if eye_tracking.is_dark and light.camera_light is not True:
+            light.cameraLight(True)
+        elif eye_tracking.is_dark is not True and light.camera_light:
+            light.cameraLight(False)
+
 except Exception as e:
     motor.stopAllMotors()
 finally:

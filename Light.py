@@ -6,6 +6,9 @@ import threading
 camera_light = 35
 warning_light = 37
 
+is_camera_light_on = False
+is_warning_light_on = False
+
 # Global variable to store the blinking thread and stop event
 blinkThread = None
 
@@ -19,9 +22,15 @@ GPIO.setup(warning_light, GPIO.OUT)
 
 # Control functions for individual lights
 def cameraLight(isOn: bool):
+    global is_camera_light_on
+    is_camera_light_on = isOn
+
     GPIO.output(camera_light, isOn)
 
 def warningLight(isOn: bool):
+    global is_warning_light_on
+    is_warning_light_on = isOn
+
     GPIO.output(warning_light, isOn)
 
 # Blinking function for the warning light

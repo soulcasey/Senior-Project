@@ -36,6 +36,7 @@ class EyeTracking:
         self.move_direction = []
         self.prev_time = time.time()  # Initialize previous time for FPS calculation
         self.headless = headless
+        self.is_dark = False
 
     def draw_point(self, img, color, position):
         cv2.circle(img, position, 5, color, -1)
@@ -54,6 +55,7 @@ class EyeTracking:
         # Calculate brightness by converting to grayscale and taking the mean
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         brightness = np.mean(gray_frame)
+        self.is_dark = False
 
         frame = cv2.flip(frame, 1)
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -119,6 +121,7 @@ class EyeTracking:
 
         elif brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
             cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            self.is_dark = True
 
         if testMode:
             self.test(frame)
