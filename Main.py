@@ -16,7 +16,6 @@ def toggle_auto_mode():
     auto_mode = not auto_mode
     motor.stopMotor1()
     motor.stopMotor2()
-    motor.stopMotor3()
     print(f"AUTO_MODE is now {'ON' if auto_mode else 'OFF'}")
 
 # Initialize the auto mode to be off by default
@@ -33,9 +32,6 @@ controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor1(Fa
 controller.set_button_press_action(ButtonType.UP, lambda: motor.moveMotor2(True) if not auto_mode else None)
 controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor2(False) if not auto_mode else None)
 
-controller.set_button_press_action(ButtonType.A, lambda: motor.moveMotor3(True) if not auto_mode else None)
-controller.set_button_press_action(ButtonType.B, lambda: motor.moveMotor3(False) if not auto_mode else None)
-
 # Set button press actions for toggling auto mode
 controller.set_button_press_action(ButtonType.SELECT, toggle_auto_mode)
 
@@ -45,9 +41,6 @@ controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1(
 
 controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if not auto_mode else None)
 controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if not auto_mode else None)
-
-controller.set_button_release_action(ButtonType.A, lambda: motor.stopMotor3() if not auto_mode else None)
-controller.set_button_release_action(ButtonType.B, lambda: motor.stopMotor3() if not auto_mode else None)
 
 # Main loop
 try:
@@ -68,9 +61,10 @@ try:
             elif Direction.RIGHT in eye_tracking.move_direction:
                 motor.moveMotor2(False)
             else:
-                motor.stopMotor2()
-        
-
+                motor.stopMotor2()      
+except Exception as e:
+    motor.stopAllMotors()
 finally:
     controller.exit()
-    # eye_tracking.exit()
+    eye_tracking.exit()
+    motor.exit()
