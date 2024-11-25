@@ -86,4 +86,5 @@ except Exception as e:
 finally:
     controller.exit()
     eye_tracking.exit()
+    light.exit()
     motor.exit()

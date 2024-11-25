@@ -72,3 +72,8 @@ def stopBlink():
 # Stop blinking the warning light
 def isBlinking():
     return blinkThread is not None
+
+def exit():
+    stopBlink()
+    cameraLight(False)
+    warningLight(False)
