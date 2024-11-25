@@ -35,7 +35,5 @@ motor1Rotate(45, False)
 motor2UpDown()
 motor1Rotate(45, False)
 
-print("Ending sequence!")
-
 
 motor.exit()

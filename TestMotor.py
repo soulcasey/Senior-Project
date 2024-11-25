@@ -1,6 +1,5 @@
 from Controller import ButtonType, Controller
 import Motor as motor
-import keyboard
 
 # Function to toggle auto_mode on or off when START or SELECT is pressed
 def toggle_auto_mode():
@@ -38,10 +37,10 @@ print("Testing motors!")
 try:
     while True:
         controller.loop()
-        if keyboard.is_pressed("q"):
-            break
 
-    print("Ending motor test")
+except Exception as e:
+    motor.stopAllMotors()
 
 finally:
-    motor.stopAllMotors()
+    controller.exit()
+    motor.exit()
