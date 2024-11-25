@@ -82,6 +82,7 @@ try:
             light.cameraLight(False)
 
 except Exception as e:
+    print(e)
     motor.stopAllMotors()
 finally:
     light.exit()
