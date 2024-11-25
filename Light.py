@@ -12,10 +12,10 @@ GPIO.setup(warning_light ,GPIO.OUT)
 def cameraLight(isOn: bool):
     if (isOn == True):
         print("Camera Light On")
-        GPIO.setup(camera_light, GPIO.HIGH)
+        GPIO.output(camera_light, True)
     else:
         print("Camera Light Off")
-        GPIO.setup(camera_light, GPIO.LOW)
+        GPIO.output(camera_light, False)
 
 def warningLight(isOn: bool):
     if (isOn == True):
