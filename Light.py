@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 
-camera_light = 24
-warning_light = 26
+camera_light = 29
+warning_light = 37
 
 if (GPIO.getmode() != GPIO.BOARD):
     GPIO.setmode(GPIO.BOARD)
