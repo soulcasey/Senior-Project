@@ -46,7 +46,7 @@ class EyeTracking:
         self.prev_time = current_time
         return fps
 
-    def loop(self):
+    def loop(self, testMode = False):
         ret, frame = self.cap.read()
         if not ret:
             raise RuntimeError("No camera")
@@ -120,12 +120,22 @@ class EyeTracking:
         elif brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
             cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
+        if testMode:
+            self.test(frame)
+
         if self.headless:
             if len(self.move_direction) > 0:
                 print(', '.join([direction.value for direction in self.move_direction]))
         else:
             cv2.imshow('Frame', frame)
-            cv2.waitKey(1) 
+            cv2.waitKey(1)
+    
+    def test(self, frame):
+        offset = 80
+        self.draw_point(frame, (160, 32, 240), (offset, self.frame_height // 2))
+        self.draw_point(frame, (0, 165, 255), (self.frame_width - offset, self.frame_height // 2))
+        self.draw_point(frame, (255, 255, 255), (self.frame_width // 2, offset))
+        self.draw_point(frame, (0, 0, 0), (self.frame_width // 2, self.frame_height - offset))
 
     def exit(self):
         self.cap.release()
