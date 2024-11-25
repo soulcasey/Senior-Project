@@ -84,7 +84,7 @@ try:
 except Exception as e:
     motor.stopAllMotors()
 finally:
-    controller.exit()
-    eye_tracking.exit()
     light.exit()
     motor.exit()
+    controller.exit()
+    eye_tracking.exit()

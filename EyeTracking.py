@@ -141,5 +141,7 @@ class EyeTracking:
         self.draw_point(frame, (0, 0, 0), (self.frame_width // 2, self.frame_height - offset))
 
     def exit(self):
-        self.cap.release()
-        cv2.destroyAllWindows()
+        try:
+            cv2.destroyAllWindows()
+        finally:
+            self.cap.release()
