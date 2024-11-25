@@ -26,6 +26,8 @@ def motor1Rotate(angle: float, direction: bool):
     motor.stopMotor1()
     time.sleep(1)
 
+print("Starting sequence!")
+
 motor2UpDown()
 motor1Rotate(90, True)
 motor2UpDown()

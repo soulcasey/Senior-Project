@@ -11,6 +11,8 @@ controller.set_button_release_action(ButtonType.A, lambda: light.cameraLight(Fal
 controller.set_button_release_action(ButtonType.B, lambda: light.warningLight(False))
 
 
+print("Testing light!")
+
 # Main loop
 try:
     while True:

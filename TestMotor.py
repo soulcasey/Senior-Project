@@ -31,6 +31,8 @@ controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1(
 controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if not auto_mode else None)
 controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if not auto_mode else None)
 
+print("Testing motors!")
+
 # Main loop
 try:
     while True:
