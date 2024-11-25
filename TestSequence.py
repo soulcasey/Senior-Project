@@ -10,19 +10,19 @@ def motor2UpDown():
     time.sleep(1)
     motor.stopMotor2()
     time.sleep(1)
-    motor.moveMotor2(True)
+    motor.moveMotor2(False)
     time.sleep(1)
     motor.stopMotor2()
     time.sleep(1)
-    motor.moveMotor2(False)
+    motor.moveMotor2(True)
     time.sleep(1)
     motor.stopMotor2()
     time.sleep(1)
 
 def motor1Rotate(angle: float, direction: bool):
-    time = 1.5 / 90 * angle
+    rotateTime = 1.5 / 90 * angle
     motor.moveMotor2(direction)
-    time.sleep(time)
+    time.sleep(rotateTime)
     motor.stopMotor2()
     time.sleep(1)
 
