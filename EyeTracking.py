@@ -5,7 +5,7 @@ import time
 import numpy as np
 
 RANGE_TARGET = 5
-DARKNESS_THRESHOLD = 50
+DARKNESS_THRESHOLD = 60
 AXIS_X = 800
 AXIS_Y = 600
 TARGET_OFFSET = 25
@@ -127,8 +127,9 @@ class EyeTracking:
             self.test(frame)
 
         if self.headless:
-            if len(self.move_direction) > 0:
-                print(', '.join([direction.value for direction in self.move_direction]))
+            # if len(self.move_direction) > 0:
+            #     print(', '.join([direction.value for direction in self.move_direction]))
+            None
         else:
             cv2.imshow('Frame', frame)
             cv2.waitKey(1)
