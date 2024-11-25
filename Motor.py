@@ -37,8 +37,8 @@ if is_raspberry_pi:
             GPIO.output(self.dir_pin2, False)
             self.motor.ChangeDutyCycle(0)
 
-    motor_1 = Motor(11, 13, 15, 100)
-    motor_2 = Motor(22, 16, 18, 100)
+    motor_1 = Motor(11, 13, 15, 25)
+    motor_2 = Motor(22, 16, 18, 25)
 
     def moveMotor1(forward: bool):
         print("Motor 1 Forward") if forward else print("Motor 1 Backward")
