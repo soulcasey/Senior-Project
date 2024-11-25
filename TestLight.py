@@ -1,5 +1,6 @@
 from Controller import ButtonType, Controller
 import Light as light
+import keyboard
 
 controller = Controller()
 
@@ -13,10 +14,9 @@ controller.set_button_release_action(ButtonType.B, lambda: light.warningLight(Fa
 
 print("Testing light!")
 
-# Main loop
-try:
-    while True:
-        controller.loop()
+while True:
+    controller.loop()
+    if keyboard.is_pressed("q"):
+        break
 
-finally:
-    controller.exit()
+print("Ending light test")
