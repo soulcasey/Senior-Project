@@ -45,20 +45,17 @@ def blink(stop_event: threading.Event):
 def startBlink():
     global blinkThread
     if isBlinking():
-        print("Warning light is already blinking")
         return
 
     stop_event = threading.Event()
     thread = threading.Thread(target=blink, args=(stop_event,))
     blinkThread = thread
     thread.start()
-    print("Warning light blinking started.")
 
 # Stop blinking the warning light
 def stopBlink():
     global blinkThread
     if isBlinking() is False:
-        print("Warning light is not blinking.")
         return
     
     stop_event = blinkThread._args[0]  # Get the stop_event from the thread
@@ -67,8 +64,7 @@ def stopBlink():
     blinkThread = None  # Reset the thread
 
     warningLight(False)
-    print("Warning light blinking stopped.")
-
+    
 # Stop blinking the warning light
 def isBlinking():
     return blinkThread is not None
