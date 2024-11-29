@@ -20,6 +20,7 @@ print("Testing light!")
 try:
     while True:
         controller.loop()
+        light.loop()
 
 finally:
     controller.exit()

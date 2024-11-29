@@ -85,6 +85,7 @@ try:
             light.cameraLight(False)
         
         motor.updateMotor()
+        light.loop()
 
 except Exception as e:
     print(e)

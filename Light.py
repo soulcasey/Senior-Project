@@ -1,6 +1,5 @@
 import platform
 import time
-import threading
 
 # Define GPIO pins for the lights
 camera_light = 35
@@ -9,14 +8,18 @@ warning_light = 37
 is_camera_light_on = False
 is_warning_light_on = False
 
-# Global variable to store the blinking thread and stop event
-blinkThread = None
+# Variable to track the last time the warning light was toggled
+last_toggle_time = 0
+blink_interval = 0.5  # 500 ms interval for blinking
+
+# Flag to control blinking state
+is_blinking = False
 
 # Check if the code is running on a Raspberry Pi or Windows
 is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
 if is_raspberry_pi:
-    import RPi.GPIO as GPIO # type: ignore
+    import RPi.GPIO as GPIO  # type: ignore
 
     # Initialize GPIO in BOARD mode
     if GPIO.getmode() != GPIO.BOARD:
@@ -29,55 +32,64 @@ if is_raspberry_pi:
 # Control functions for individual lights
 def cameraLight(isOn: bool):
     global is_camera_light_on
+
+    if is_camera_light_on == isOn:
+        return
+
     is_camera_light_on = isOn
+
+    print(f"Camera Light {is_camera_light_on}")
 
     if is_raspberry_pi:
         GPIO.output(camera_light, isOn)
 
 def warningLight(isOn: bool):
     global is_warning_light_on
+
+    if is_warning_light_on == isOn:
+        return
+    
     is_warning_light_on = isOn
+
+    print(f"Warning Light {is_warning_light_on}")
 
     if is_raspberry_pi:
         GPIO.output(warning_light, isOn)
 
 # Blinking function for the warning light
-def blink(stop_event: threading.Event):
-    while not stop_event.is_set():
-        warningLight(True)
-        time.sleep(0.5)  
-        warningLight(False)
-        time.sleep(0.5) 
+def blinkWarningLight():
+    global last_toggle_time
+
+    current_time = time.time()
+    if current_time - last_toggle_time >= blink_interval:
+        # Toggle the warning light
+        if is_warning_light_on:
+            warningLight(False)
+        else:
+            warningLight(True)
+
+        # Update the last toggle time
+        last_toggle_time = current_time
 
 # Start blinking the warning light
 def startBlink():
-    global blinkThread
-    if isBlinking():
-        return
-
-    stop_event = threading.Event()
-    thread = threading.Thread(target=blink, args=(stop_event,))
-    blinkThread = thread
-    thread.start()
+    global is_blinking
+    if not is_blinking:
+        is_blinking = True
 
 # Stop blinking the warning light
 def stopBlink():
-    global blinkThread
-    if isBlinking() is False:
-        return
-    
-    stop_event = blinkThread._args[0]  # Get the stop_event from the thread
-    stop_event.set()  # Signal the thread to stop
-    blinkThread.join()  # Wait for the thread to finish
-    blinkThread = None  # Reset the thread
+    global is_blinking
+    if is_blinking:
+        is_blinking = False
+        warningLight(False)  # Ensure the light is turned off when stopping the blink
 
-    warningLight(False)
-    
-# Stop blinking the warning light
-def isBlinking():
-    return blinkThread is not None
+# Main loop that checks the blinking state and controls the light
+def loop():
+    if is_blinking:
+        blinkWarningLight()
 
 def exit():
-    stopBlink()
+    # Turn off the lights when exiting
     cameraLight(False)
     warningLight(False)
