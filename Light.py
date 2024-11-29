@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import platform
 import time
 import threading
 
@@ -12,26 +12,34 @@ is_warning_light_on = False
 # Global variable to store the blinking thread and stop event
 blinkThread = None
 
-# Initialize GPIO in BOARD mode
-if GPIO.getmode() != GPIO.BOARD:
-    GPIO.setmode(GPIO.BOARD)
+# Check if the code is running on a Raspberry Pi or Windows
+is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
-# Setup GPIO pins as output
-GPIO.setup(camera_light, GPIO.OUT)
-GPIO.setup(warning_light, GPIO.OUT)
+if is_raspberry_pi:
+    import RPi.GPIO as GPIO # type: ignore
+
+    # Initialize GPIO in BOARD mode
+    if GPIO.getmode() != GPIO.BOARD:
+        GPIO.setmode(GPIO.BOARD)
+
+    # Setup GPIO pins as output
+    GPIO.setup(camera_light, GPIO.OUT)
+    GPIO.setup(warning_light, GPIO.OUT)
 
 # Control functions for individual lights
 def cameraLight(isOn: bool):
     global is_camera_light_on
     is_camera_light_on = isOn
 
-    GPIO.output(camera_light, isOn)
+    if is_raspberry_pi:
+        GPIO.output(camera_light, isOn)
 
 def warningLight(isOn: bool):
     global is_warning_light_on
     is_warning_light_on = isOn
 
-    GPIO.output(warning_light, isOn)
+    if is_raspberry_pi:
+        GPIO.output(warning_light, isOn)
 
 # Blinking function for the warning light
 def blink(stop_event: threading.Event):
