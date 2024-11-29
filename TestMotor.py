@@ -37,8 +37,10 @@ print("Testing motors!")
 try:
     while True:
         controller.loop()
+        motor.updateMotor()
 
 except Exception as e:
+    print(e)
     motor.stopAllMotors()
 
 finally:

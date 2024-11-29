@@ -2,6 +2,7 @@ import platform
 import time
 import threading
 from enum import Enum
+from typing import List
 
 class MotorState(Enum):
     STOP = 1
@@ -12,7 +13,7 @@ class MotorState(Enum):
 is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
 if is_raspberry_pi:
-    import RPi.GPIO as GPIO
+    import RPi.GPIO as GPIO # type: ignore
 
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)
@@ -29,6 +30,7 @@ class Motor:
         self.multiplier = multiplier  # Degrees per second
         self.angle = 0
         self.motor_state: MotorState = MotorState.STOP
+        self.last_time = time.time()
 
         if is_raspberry_pi:
             GPIO.setup(self.pwm_pin, GPIO.OUT)
@@ -42,41 +44,72 @@ class Motor:
         print("Motor " + str(motorCount) + " setup complete")
 
     def move(self, forward: bool):
-        self.motor_state = MotorState.FORWARD if forward else MotorState.BACKWARD
+        motor_state = MotorState.FORWARD if forward else MotorState.BACKWARD
+        if self.motor_state == motor_state:
+            return
+
+        self.motor_state = motor_state
+        self.last_time = time.time()
+
         if is_raspberry_pi:
             GPIO.output(self.dir_pin1, forward)
             GPIO.output(self.dir_pin2, not forward)
             self.motor.ChangeDutyCycle(speed)
 
     def stop(self):
+        if self.motor_state == MotorState.STOP:
+            return
+
         self.motor_state = MotorState.STOP
+        self.last_time = time.time()
+
         if is_raspberry_pi:
             GPIO.output(self.dir_pin1, False)
             GPIO.output(self.dir_pin2, False)
             self.motor.ChangeDutyCycle(0)
 
-motor_1 = Motor(11, 13, 15, 90 / 1.5)  # Rotates 90 degrees every 1.5 seconds
-motor_2 = Motor(22, 16, 18, 45)  # Rotates 45 degrees every second
+
+motor1 = Motor(11, 13, 15, 90 / 1.5) # Motor 1
+motor2 = Motor(22, 16, 18, 45) # Motor 2
+motors: List[Motor] = [motor1, motor2]
+
+def updateMotor():
+    for motor in motors:
+        if motor.motor_state == MotorState.STOP:
+            continue
+
+        current_time = time.time()
+
+        adjusted_angle = (current_time - motor.last_time) * motor.multiplier
+
+        if motor.motor_state == MotorState.FORWARD:
+            motor.angle += adjusted_angle
+        else:
+            motor.angle -= adjusted_angle
+
+        motor.last_time = current_time
+
+        print(motor.angle)
 
 def moveMotor1(forward: bool):
     print("Motor 1 Forward") if forward else print("Motor 1 Backward")
-    motor_1.move(forward)
+    motors[0].move(forward)
 
 def stopMotor1():
     print("Motor 1 Stop")
-    motor_1.stop()
+    motors[0].stop()
 
 def moveMotor2(forward: bool):
     print("Motor 2 Forward") if forward else print("Motor 2 Backward")
-    motor_2.move(forward)
+    motors[1].move(forward)
 
 def stopMotor2():
     print("Motor 2 Stop")
-    motor_2.stop()
+    motors[1].stop()
 
 def stopAllMotors():
-    stopMotor1()
-    stopMotor2()
+    for motor in motors:
+        motor.stop()
 
 def exit():
     if is_raspberry_pi:
