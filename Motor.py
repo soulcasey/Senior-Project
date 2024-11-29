@@ -73,7 +73,7 @@ motor1 = Motor(11, 13, 15, 90 / 1.5) # Motor 1
 motor2 = Motor(22, 16, 18, 45) # Motor 2
 motors: List[Motor] = [motor1, motor2]
 
-def updateMotor():
+def loop():
     for motor in motors:
         if motor.motor_state == MotorState.STOP:
             continue

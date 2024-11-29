@@ -63,29 +63,31 @@ try:
     while True:
         controller.loop()
         eye_tracking.loop()
+        motor.loop()
+        light.loop()
 
-        #if auto_mode:
-            # if Direction.UP in eye_tracking.move_direction:
-            #     motor.moveMotor1(True)
-            # elif Direction.DOWN in eye_tracking.move_direction:
-            #     motor.moveMotor1(False)
-            # else:
-            #     motor.stopMotor1()
+        if current_state == SystemState.AUTO:
+            if eye_tracking.move_direction.count() > 0:
+                if Direction.UP in eye_tracking.move_direction:
+                    motor.moveMotor1(True)
+                elif Direction.DOWN in eye_tracking.move_direction:
+                    motor.moveMotor1(False)
+                else:
+                    motor.stopMotor1()
 
-            # if Direction.LEFT in eye_tracking.move_direction:
-            #     motor.moveMotor2(True)
-            # elif Direction.RIGHT in eye_tracking.move_direction:
-            #     motor.moveMotor2(False)
-            # else:
-            #     motor.stopMotor2()
+                if Direction.LEFT in eye_tracking.move_direction:
+                    motor.moveMotor2(True)
+                elif Direction.RIGHT in eye_tracking.move_direction:
+                    motor.moveMotor2(False)
+                else:
+                    motor.stopMotor2()
+            else:
+                set_state(SystemState.IDLE)
         
         if eye_tracking.is_dark and light.camera_light is not True:
             light.cameraLight(True)
         elif eye_tracking.is_dark is not True and light.camera_light:
             light.cameraLight(False)
-        
-        motor.updateMotor()
-        light.loop()
 
 except Exception as e:
     print(e)
