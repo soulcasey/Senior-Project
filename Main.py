@@ -67,7 +67,7 @@ try:
         light.loop()
 
         if current_state == SystemState.AUTO:
-            if eye_tracking.move_direction.count() > 0:
+            if len(eye_tracking.move_direction) > 0:
                 if Direction.UP in eye_tracking.move_direction:
                     motor.moveMotor1(True)
                 elif Direction.DOWN in eye_tracking.move_direction:
