@@ -3,17 +3,12 @@ import cv2
 import mediapipe as mp
 import time
 import numpy as np
-import platform
-
 
 RANGE_TARGET = 5
 DARKNESS_THRESHOLD = 60
 AXIS_X = 800
 AXIS_Y = 600
 TARGET_OFFSET = 25
-
-# Check if the code is running on a Raspberry Pi or Windows
-is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
 class Direction(Enum):
     LEFT = "LEFT"
@@ -56,9 +51,6 @@ class EyeTracking:
         ret, frame = self.cap.read()
         if not ret:
             raise RuntimeError("No camera")
-        
-        if is_raspberry_pi: # Rotate the frame 90 degrees clockwise if pi
-            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 
         # Calculate brightness by converting to grayscale and taking the mean
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
