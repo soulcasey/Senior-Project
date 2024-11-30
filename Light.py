@@ -82,7 +82,8 @@ def stopBlink():
     global is_blinking
     if is_blinking:
         is_blinking = False
-        warningLight(False)  # Ensure the light is turned off when stopping the blink
+        
+    warningLight(False)  # Ensure the light is turned off when stopping the blink
 
 # Main loop that checks the blinking state and controls the light
 def loop():
