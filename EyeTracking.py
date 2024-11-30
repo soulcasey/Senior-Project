@@ -6,8 +6,8 @@ import numpy as np
 
 RANGE_TARGET = 5
 DARKNESS_THRESHOLD = 60
-AXIS_X = 800
-AXIS_Y = 600
+AXIS_X = 300
+AXIS_Y = 300
 TARGET_OFFSET = 25
 
 class Direction(Enum):
@@ -22,7 +22,7 @@ class EyeTracking:
         # Initialize face mesh model instead of holistic for more precise eye detection
         self.mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8)
         
-        # Camera setupc
+        # Camera setup
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, AXIS_X)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, AXIS_Y)
@@ -55,19 +55,19 @@ class EyeTracking:
         # Calculate brightness by converting to grayscale and taking the mean
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         brightness = np.mean(gray_frame)
-        self.is_dark = False
+        
+        if brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
+            self.is_dark = brightness < DARKNESS_THRESHOLD
 
         frame = cv2.flip(frame, 1)
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = self.mp_holistic.process(frame_rgb)
 
-        # FPS calculation
-        fps = self.calculate_fps()
-
-        # Display FPS on frame
-        cv2.putText(frame, f"FPS: {int(fps)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         self.move_direction.clear()
+    
+        # FPS calculation
+        fps = self.calculate_fps()
 
         # If face landmarks have been detected
         if results.pose_landmarks:
@@ -81,21 +81,11 @@ class EyeTracking:
                 int(results.pose_landmarks.landmark[mp.solutions.holistic.PoseLandmark.RIGHT_EYE].y * self.frame_height)
             )
 
-            # Draw the left and right eye reference points along with their target points
-            self.draw_point(frame, (0, 255, 0), left_eye)
-            self.draw_point(frame, (0, 0, 255), self.target_point_left)
-            self.draw_point(frame, (0, 255, 0), right_eye)
-            self.draw_point(frame, (0, 0, 255), self.target_point_right)
-
             # Calculate movement to align the reference point to the target point
             x_movement_left = self.target_point_left[0] - left_eye[0]
             y_movement_left = self.target_point_left[1] - left_eye[1]
             x_movement_right = self.target_point_right[0] - right_eye[0]
             y_movement_right = self.target_point_right[1] - right_eye[1]
-
-            # Display coordinate and calculation information on screen for prototype
-            cv2.putText(frame, f"EYE POSITION: {right_eye}, {left_eye}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            cv2.putText(frame, f"MOVE BY: ({x_movement_right}, {y_movement_right}), ({x_movement_left}, {y_movement_left})", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
             # Check if the points are overlapped
             x_average = (x_movement_left + x_movement_right) / 2
@@ -114,14 +104,28 @@ class EyeTracking:
                     self.move_direction.append(Direction.UP)
                 else:
                     self.move_direction.append(Direction.DOWN)
-                    
             
-            move_direction_text = ', '.join([direction.value for direction in self.move_direction]) if len(self.move_direction) > 0 else "GOOD"
-            cv2.putText(frame, move_direction_text, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            if self.headless is False:
 
-        elif brightness < DARKNESS_THRESHOLD:  # Check if the room is too dark
-            cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            self.is_dark = True
+                # Display FPS on frame
+                cv2.putText(frame, f"FPS: {int(fps)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+                # Draw the left and right eye reference points along with their target points
+                self.draw_point(frame, (0, 255, 0), left_eye)
+                self.draw_point(frame, (0, 0, 255), self.target_point_left)
+                self.draw_point(frame, (0, 255, 0), right_eye)
+                self.draw_point(frame, (0, 0, 255), self.target_point_right)
+
+                # Display coordinate and calculation information on screen for prototype
+                cv2.putText(frame, f"{right_eye}, {left_eye}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                cv2.putText(frame, f"{x_movement_right}, {y_movement_right}), ({x_movement_left}, {y_movement_left})", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+
+                if self.is_dark:
+                    cv2.putText(frame, "ROOM TOO DARK", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+                move_direction_text = ', '.join([direction.value for direction in self.move_direction]) if len(self.move_direction) > 0 else "GOOD"
+                cv2.putText(frame, move_direction_text, (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    
 
         if testMode:
             self.test(frame)
