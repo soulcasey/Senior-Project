@@ -29,6 +29,9 @@ if is_raspberry_pi:
     GPIO.setup(camera_light, GPIO.OUT)
     GPIO.setup(warning_light, GPIO.OUT)
 
+    GPIO.output(camera_light, False)
+    GPIO.output(warning_light, False)
+
 # Control functions for individual lights
 def cameraLight(isOn: bool):
     global is_camera_light_on
@@ -82,7 +85,7 @@ def stopBlink():
     global is_blinking
     if is_blinking:
         is_blinking = False
-        
+
     warningLight(False)  # Ensure the light is turned off when stopping the blink
 
 # Main loop that checks the blinking state and controls the light
