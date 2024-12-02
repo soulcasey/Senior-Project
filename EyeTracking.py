@@ -33,7 +33,7 @@ def calcualte_angle(left, right):
 class EyeTracking:
     def __init__(self, headless: bool):
         # Initialize face mesh model instead of holistic for more precise eye detection
-        self.mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.8, min_tracking_confidence=0.8)
+        self.mp_holistic = mp.solutions.holistic.Holistic(min_detection_confidence=0.7, min_tracking_confidence=0.7)
         
         # Camera setup
         self.cap = cv2.VideoCapture(0)
