@@ -41,8 +41,6 @@ def cameraLight(isOn: bool):
 
     is_camera_light_on = isOn
 
-    print(f"Camera Light {is_camera_light_on}")
-
     if is_raspberry_pi:
         GPIO.output(camera_light, isOn)
 
@@ -53,8 +51,6 @@ def warningLight(isOn: bool):
         return
     
     is_warning_light_on = isOn
-
-    print(f"Warning Light {is_warning_light_on}")
 
     if is_raspberry_pi:
         GPIO.output(warning_light, isOn)

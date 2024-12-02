@@ -89,8 +89,6 @@ def loop():
 
         motor.last_time = current_time
 
-        print(motor.angle)
-
 def moveMotor1(forward: bool):
     print("Motor 1 Forward") if forward else print("Motor 1 Backward")
     motors[0].move(forward)
