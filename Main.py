@@ -43,8 +43,8 @@ eye_tracking = EyeTracking(headless)
 controller = Controller()
 
 # Set button press actions for motor control with auto_mode checks
-controller.set_button_press_action(ButtonType.LEFT, lambda: motor.moveMotor2(True) if current_state == SystemState.MANUAL else None)
-controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor2(False) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.LEFT, lambda: motor.moveMotor2(False) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor2(True) if current_state == SystemState.MANUAL else None)
 
 controller.set_button_press_action(ButtonType.UP, lambda: motor.moveMotor1(True) if current_state == SystemState.MANUAL else None)
 controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor1(False) if current_state == SystemState.MANUAL else None)
@@ -90,9 +90,9 @@ try:
                     elif first_instruction is Direction.CW: 
                         motor.moveMotor1(False)
                     elif first_instruction is Direction.LEFT: 
-                        motor.moveMotor2(False)
-                    elif first_instruction is Direction.RIGHT: 
                         motor.moveMotor2(True)
+                    elif first_instruction is Direction.RIGHT: 
+                        motor.moveMotor2(False)
             else:
                 is_motor_moving: False
                 last_time = time.time()
