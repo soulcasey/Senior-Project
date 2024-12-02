@@ -4,6 +4,7 @@ import Motor as motor
 import Light as light
 import argparse
 from enum import Enum
+import time
 
 class SystemState(Enum):
     IDLE = 1
@@ -42,11 +43,11 @@ eye_tracking = EyeTracking(headless)
 controller = Controller()
 
 # Set button press actions for motor control with auto_mode checks
-controller.set_button_press_action(ButtonType.LEFT, lambda: motor.moveMotor1(True) if current_state == SystemState.MANUAL else None)
-controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor1(False) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.LEFT, lambda: motor.moveMotor2(True) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.RIGHT, lambda: motor.moveMotor2(False) if current_state == SystemState.MANUAL else None)
 
-controller.set_button_press_action(ButtonType.UP, lambda: motor.moveMotor2(True) if current_state == SystemState.MANUAL else None)
-controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor2(False) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.UP, lambda: motor.moveMotor1(True) if current_state == SystemState.MANUAL else None)
+controller.set_button_press_action(ButtonType.DOWN, lambda: motor.moveMotor1(False) if current_state == SystemState.MANUAL else None)
 
 controller.set_button_press_action(ButtonType.SELECT, lambda:set_state(SystemState.IDLE if current_state == SystemState.MANUAL else SystemState.MANUAL))
 controller.set_button_press_action(ButtonType.START, lambda: set_state(SystemState.AUTO) if current_state == SystemState.IDLE else None)
@@ -58,6 +59,10 @@ controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1(
 controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
 controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
 
+last_time = time.time()
+is_motor_moving = False
+DELAY = 3
+
 # Main loop
 try:
     while True:
@@ -67,20 +72,25 @@ try:
         light.loop()
 
         if current_state == SystemState.AUTO:
-            if len(eye_tracking.move_direction) > 0:
-                if Direction.UP in eye_tracking.move_direction:
-                    motor.moveMotor1(True)
-                elif Direction.DOWN in eye_tracking.move_direction:
-                    motor.moveMotor1(False)
-                else:
-                    motor.stopMotor1()
+            if len(eye_tracking.instruction_sequence) > 0:
+                
+                if is_motor_moving:
+                    is_motor_moving: False
+                elif time.time() - last_time > DELAY:
 
-                if Direction.LEFT in eye_tracking.move_direction:
-                    motor.moveMotor2(True)
-                elif Direction.RIGHT in eye_tracking.move_direction:
-                    motor.moveMotor2(False)
-                else:
-                    motor.stopMotor2()
+                    first_instruction = eye_tracking.instruction_sequence[0]
+
+                    is_motor_moving = True
+                    last_time = time.time()
+                    
+                    if first_instruction is Direction.CCW: 
+                        motor.moveMotor2(True)
+                    elif first_instruction is Direction.CW: 
+                        motor.moveMotor2(False)
+                    elif first_instruction is Direction.LEFT: 
+                        motor.moveMotor1(True)
+                    elif first_instruction is Direction.RIGHT: 
+                        motor.moveMotor2(False)
             else:
                 set_state(SystemState.IDLE)
         
