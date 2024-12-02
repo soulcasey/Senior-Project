@@ -5,8 +5,8 @@ import time
 import numpy as np
 import math
 
-DISTANCE_RANGE = 10
-ANGLE_RANGE = 15
+DISTANCE_RANGE = 5
+ANGLE_RANGE = 10
 DARKNESS_THRESHOLD = 60
 AXIS_X = 400
 AXIS_Y = 400
