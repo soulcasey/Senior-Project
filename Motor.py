@@ -33,10 +33,10 @@ class Motor:
         self.last_time = time.time()
 
         if is_raspberry_pi:
-            GPIO.setup(self.pwm_pin, GPIO.OUT)
-            GPIO.setup(self.dir_pin1, GPIO.OUT)
-            GPIO.setup(self.dir_pin2, GPIO.OUT)
-            self.motor = GPIO.PWM(self.pwm_pin, 1000)
+            GPIO.setup(pwm_pin, GPIO.OUT)
+            GPIO.setup(dir_pin1, GPIO.OUT)
+            GPIO.setup(dir_pin2, GPIO.OUT)
+            self.motor = GPIO.PWM(pwm_pin, 1000)
             self.motor.start(0)
 
         global motorCount
