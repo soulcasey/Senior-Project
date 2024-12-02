@@ -13,7 +13,7 @@ class MotorState(Enum):
 is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
 if is_raspberry_pi:
-    import RPi.GPIO as GPIO # type: ignore
+    import RPi.GPIO as GPIO
 
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)

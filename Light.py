@@ -19,7 +19,7 @@ is_blinking = False
 is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.node().lower()
 
 if is_raspberry_pi:
-    import RPi.GPIO as GPIO  # type: ignore
+    import RPi.GPIO as GPIO
 
     # Initialize GPIO in BOARD mode
     if GPIO.getmode() != GPIO.BOARD:
