@@ -76,7 +76,9 @@ try:
                 
                 if is_motor_moving:
                     is_motor_moving: False
-                elif time.time() - last_time > DELAY:
+                    motor.stopAllMotors()
+                    
+                if time.time() - last_time > DELAY:
 
                     first_instruction = eye_tracking.instruction_sequence[0]
 
@@ -84,13 +86,13 @@ try:
                     last_time = time.time()
                     
                     if first_instruction is Direction.CCW: 
-                        motor.moveMotor2(True)
-                    elif first_instruction is Direction.CW: 
-                        motor.moveMotor2(False)
-                    elif first_instruction is Direction.LEFT: 
                         motor.moveMotor1(True)
-                    elif first_instruction is Direction.RIGHT: 
+                    elif first_instruction is Direction.CW: 
+                        motor.moveMotor1(False)
+                    elif first_instruction is Direction.LEFT: 
                         motor.moveMotor2(False)
+                    elif first_instruction is Direction.RIGHT: 
+                        motor.moveMotor2(True)
             else:
                 set_state(SystemState.IDLE)
         
