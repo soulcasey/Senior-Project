@@ -6,8 +6,8 @@ import numpy as np
 
 RANGE_TARGET = 5
 DARKNESS_THRESHOLD = 60
-AXIS_X = 300
-AXIS_Y = 300
+AXIS_X = 400
+AXIS_Y = 400
 TARGET_OFFSET = 25
 
 class Direction(Enum):
@@ -30,8 +30,8 @@ class EyeTracking:
 
         # Set target points
         self.frame_width, self.frame_height = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.target_point_left = (self.frame_width // 2 + 25, self.frame_height // 2)
-        self.target_point_right = (self.frame_width // 2 - 25, self.frame_height // 2)
+        self.target_point_left = (53, 175)
+        self.target_point_right = (78, 173)
 
         self.move_direction = []
         self.prev_time = time.time()  # Initialize previous time for FPS calculation
