@@ -30,8 +30,8 @@ class EyeTracking:
 
         # Set target points
         self.frame_width, self.frame_height = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.target_point_left = (53, 175)
-        self.target_point_right = (78, 173)
+        self.target_point_left = (142, 168)
+        self.target_point_right = (199, 144)
 
         self.move_direction = []
         self.prev_time = time.time()  # Initialize previous time for FPS calculation
