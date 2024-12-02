@@ -112,8 +112,6 @@ class EyeTracking:
             if angle_difference < -180:
                 angle_difference += 360
 
-            print(str(current_angle) + " " + str(angle_difference))
-
             if abs(angle_difference) > ANGLE_RANGE:
                 if angle_difference < 0:
                     self.instruction_sequence.append(Direction.CW)
