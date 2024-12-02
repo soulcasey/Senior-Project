@@ -53,11 +53,11 @@ controller.set_button_press_action(ButtonType.SELECT, lambda:set_state(SystemSta
 controller.set_button_press_action(ButtonType.START, lambda: set_state(SystemState.AUTO) if current_state == SystemState.IDLE else None)
 
 # Set button release actions to stop motors
-controller.set_button_release_action(ButtonType.LEFT, lambda: motor.stopMotor1() if current_state == SystemState.MANUAL else None)
-controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor1() if current_state == SystemState.MANUAL else None)
+controller.set_button_release_action(ButtonType.LEFT, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
+controller.set_button_release_action(ButtonType.RIGHT, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
 
-controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
-controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor2() if current_state == SystemState.MANUAL else None)
+controller.set_button_release_action(ButtonType.UP, lambda: motor.stopMotor1() if current_state == SystemState.MANUAL else None)
+controller.set_button_release_action(ButtonType.DOWN, lambda: motor.stopMotor1() if current_state == SystemState.MANUAL else None)
 
 last_time = time.time()
 is_motor_moving = False
