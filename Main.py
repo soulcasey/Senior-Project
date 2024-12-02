@@ -77,7 +77,7 @@ try:
                 if is_motor_moving:
                     is_motor_moving: False
                     motor.stopAllMotors()
-                    
+
                 if time.time() - last_time > DELAY:
 
                     first_instruction = eye_tracking.instruction_sequence[0]
@@ -94,6 +94,8 @@ try:
                     elif first_instruction is Direction.RIGHT: 
                         motor.moveMotor2(True)
             else:
+                is_motor_moving: False
+                last_time = time.time()
                 set_state(SystemState.IDLE)
         
         if eye_tracking.is_dark and light.camera_light is not True:
