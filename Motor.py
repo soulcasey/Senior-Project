@@ -15,6 +15,8 @@ is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.nod
 if is_raspberry_pi:
     import RPi.GPIO as GPIO
 
+    GPIO.cleanup()
+
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)
 
