@@ -15,8 +15,6 @@ is_raspberry_pi = platform.system() == "Linux" and "raspberrypi" in platform.nod
 if is_raspberry_pi:
     import RPi.GPIO as GPIO
 
-    GPIO.cleanup()
-
     if GPIO.getmode() != GPIO.BOARD:
         GPIO.setmode(GPIO.BOARD)
 
@@ -71,8 +69,8 @@ class Motor:
             self.motor.ChangeDutyCycle(0)
 
 
-motor1 = Motor(11, 13, 15, 90 / 1.5) # Motor 1
 motor2 = Motor(22, 16, 18, 45) # Motor 2
+motor1 = Motor(11, 13, 15, 90 / 1.5) # Motor 1
 motors: List[Motor] = [motor1, motor2]
 
 def loop():
